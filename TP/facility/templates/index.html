@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+
+
+<div class="container text-center">
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col-4 text-center">
+            <h1>{{ user|title }}, nice to see you back! </h1>
+
+        </div>
+    </div>
+        <img src="/static/dog.jpg" alt="dog">
+
+</div>
+
+{% else %}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col-4 text-center">
+            <h1>WELCOME</h1>
+            <br>
+            <h4>Please <a class="btn btn-warning" href="{% url 'login'%}">login</a> to continue</h4>
+        </div>
+    </div>
+</div>
+
+{% endif %}
+<!--<p>Projektų skaičius: {{num_projects}}</p>-->
+<!--<p>Agentų skaičius: {{num_agents}}</p>-->
+<!--<p>Atiduotos įrangos sutarčių: {{num_orders}}</p>-->
+
+{% endblock %}

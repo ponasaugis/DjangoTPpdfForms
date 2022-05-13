@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>All Agents</h2>
+    <hr>
+    {% for agent in all_agents %}
+        <p><a href="{% url 'agent' agent.id %}">{{ agent.first_name }} {{ agent.last_name }}</a></p>
+
+    {% endfor %}
+
+
+{% endblock %}

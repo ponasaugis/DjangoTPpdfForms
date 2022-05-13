@@ -1,0 +1,172 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>Title</title>
+
+    <link rel="stylesheet" href="{% static 'orderpdf.css' %}">
+
+    <style type="text/css">
+    @font-face {
+        font-family: "Arial";
+        src: url('static/arial.ttf');
+    }
+    html {
+        font-family: Arial, sans-serif;
+    }
+
+    @page template {
+        size: a4 portrait;
+        left: 5cm;
+        right: 2cm;
+        }
+
+    html {
+        font-family: Arial;
+        font-size: 11px;
+        font-weight: normal;
+        color: #000000;
+        background-color: transparent;
+        margin: 0;
+        padding: 0;
+        line-height: 150%;
+        border: 1px none;
+        display: inline;
+        width: auto;
+        height: auto;
+        white-space: normal;
+}
+
+
+
+    h2 {
+        margin: 0;
+        }
+    p{
+        padding: 0;
+        margin: 0
+        }
+    body {
+        text-align: center;
+        width: 100%;
+        }
+
+    .m-3 {
+        margin-bottom: 5px;
+        }
+
+    table {
+        display: block;
+        -pdf-keep-in-frame-mode: shrink;
+
+        }
+
+        tr,
+        th,
+        td {
+            vertical-align: middle;
+            width: auto;
+            padding-top: 3px;
+            padding-left: 3px;
+            }
+        th {
+            text-align: center;
+            font-weight: bold;
+            }
+    </style>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h2>Order No: {{single_agent.id}}</h2>
+        <p>{% now "Y-m-d" %}</p>
+        <p style="margin-bottom: 10px;">Vilnius</p>
+    </div>
+    <div class="content" style="text-align: left; ">
+        <h3 class="sans">Agent: {{ single_agent.agent_id.first_name }} {{ single_agent.agent_id.last_name }}. {{ single_agent.agent_id.city }}, {{ single_agent.agent_id.street }}</h3>
+
+
+
+        <table style="border: 1px solid black">
+            <tr>
+                <th style="">Order. Nr.</th>
+                <th style="">Equipment</th>
+                <th style="">Sum without VAT, Eur</th>
+            </tr>
+
+                            {% for orderline in single_agent.orderlines.all %}
+                                <tr>
+                                    <td style="">{{ forloop.counter }}</td>
+                                    <td style="">{{orderline.equipement_id.manufacturer_id}} {{orderline.equipement_id.eqModels_id}} <strong>S/N:</strong> {{orderline.sn}}</td>
+                                    <td style="">{{orderline.equipement_id.price}}€</td>
+                                </tr>
+                            {% endfor %}
+                <tr>
+                    <td colspan="2" style="text-align: right">Total without VAT Eur.:</td>
+                    <td>{{single_agent.totalWithoutVat}}Eur</td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: right">VAT (21%) Eur.:</td>
+                    <td>{{single_agent.totalVat}}Eur</td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: right">Total with VAT Eur.:</td>
+                    <td>{{single_agent.total}}Eur</td>
+                </tr>
+
+
+        </table>
+
+        </div>
+
+        <p style="margin-top: 10px">Equipment issued by:</p>
+        <p style="margin-top: 20px">_______________________&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_______________&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;________________</p>
+        <p ><span>(Job title)</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Signature)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Name)</p>
+
+        <p style="margin-top: 20px">Goods accepted by:</p>
+        <p style="margin-top: 20px"><span>(Job title)</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            (Signature)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size: 12px">{{ single_agent.agent_id.first_name }} {{ single_agent.agent_id.last_name }}</span></p>
+
+
+
+    </div>
+
+
+<!--        <div class="card">-->
+<!--              <div class="card-body">-->
+<!--                  <h1 class="red">TEST TEST TEST</h1>-->
+<!--                  <h5 class="card-title">{{ single_agent.first_name }} {{ single_agent.last_name }}</h5>-->
+<!--                  <h6 class="card-subtitle mb-2 text-muted">{{ single_agent.project_id }}</h6>-->
+<!--                  <p class="card-text">-->
+
+<!--                  {% for line in single_agent.ordersall.all%}-->
+
+<!--                            {% for orderline in line.orderlines.all %}-->
+<!--                                <p class="card-text"><strong>{{orderline.equipement_id.types_id}}</strong> {{orderline.equipement_id.manufacturer_id}} {{orderline.equipement_id.eqModels_id}} <strong>S/N:</strong> {{orderline.sn}} <strong>Price:</strong> {{orderline.equipement_id.price}}€  </p>-->
+<!--                            {% endfor %}-->
+
+
+<!--                  {% endfor %}-->
+
+<!--                  <p><em><strong>Date:</strong> {% for line in single_agent.ordersall.all%}-->
+<!--                  {{line.date_created}} {{line.id}}-->
+<!--                  {% endfor %}</em></p>-->
+
+
+
+<!--                  </p>-->
+
+
+<!--              </div>-->
+
+
+
+<!--</div>-->
+
+</body>
+</html>

@@ -1,0 +1,187 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>Title</title>
+
+    <link rel="stylesheet" href="{% static 'orderpdf.css' %}">
+
+    <style type="text/css">
+    @font-face {
+        font-family: "Arial";
+        src: url('static/arial.ttf');
+    }
+    html {
+        font-family: Arial, sans-serif;
+    }
+
+    @page template {
+        size: a4 portrait;
+        left: 5cm;
+        right: 2cm;
+        }
+
+    html {
+        font-family: Arial;
+        font-size: 11px;
+        font-weight: normal;
+        color: #000000;
+        background-color: transparent;
+        margin: 0;
+        padding: 0;
+        line-height: 150%;
+        border: 1px none;
+        display: inline;
+        width: auto;
+        height: auto;
+        white-space: normal;
+}
+
+
+
+    h2 {
+        margin: 0;
+        }
+    p{
+        padding: 0;
+        margin: 0
+        }
+    body {
+        text-align: center;
+        width: 100%;
+        }
+
+    .m-3 {
+        margin-bottom: 5px;
+        }
+
+    table {
+        display: block;
+        -pdf-keep-in-frame-mode: shrink;
+
+        }
+
+        tr,
+        th,
+        td {
+            vertical-align: middle;
+            width: auto;
+            padding-top: 3px;
+            padding-left: 3px;
+            }
+        th {
+            text-align: center;
+            font-weight: bold;
+            }
+    </style>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h2>UAB „Teleperformance LT“</h2>
+        <p class="m-3">J.Jasinskio g. 16 B, LT-03163, Vilnius</p>
+        <p>MATERIALINIŲ VERTYBIŲ PERDAVIMO–PERĖMIMO AKTAS IR DARBAS IŠ NAMŲ</p>
+        <p>(PRIEDAS PRIE DARBO SUTARTIES NR. ({{single_agent.id}})</p>
+        <p>{% now "Y-m-d" %}</p>
+        <p style="margin-bottom: 10px;">Vilnius</p>
+    </div>
+    <div class="content" style="text-align: left; ">
+        <p class="sans">Uždaroji akcinė bendrovė ,,UAB Imones pavadinimas“, juridinio asmens kodas 5767567567, buveinės adresas J. Jasinskio 16B, Vilnius, atstovaujama Ekatrina Osina (toliau – Darbdavys), ir {{ single_agent.agent_id.first_name }} {{ single_agent.agent_id.last_name }}. {{ single_agent.agent_id.city }}, {{ single_agent.agent_id.street }}</p>
+        <p>(toliau – <strong>Darbuotojas</strong>), toliau kartu vadinami ,,Šalimis“, susitarė bei sudarė šį materialinių vertybių (kompiuterinės įrangos) perdavimo-priėmimo aktą:</p>
+
+        <div style="">
+
+        <table style="border: 1px solid black">
+            <tr>
+                <th style="">Eil. Nr.</th>
+                <th style="">Pavadinimas</th>
+                <th style="">Suma su PVM, Eur</th>
+            </tr>
+
+                            {% for orderline in single_agent.orderlines.all %}
+                                <tr>
+                                    <td style="">{{ forloop.counter }}</td>
+                                    <td style="">{{orderline.equipement_id.manufacturer_id}} {{orderline.equipement_id.eqModels_id}} <strong>S/N:</strong> {{orderline.sn}}</td>
+                                    <td style="">{{orderline.equipement_id.price}}€</td>
+                                </tr>
+                            {% endfor %}
+                <tr>
+                    <td colspan="2" style="text-align: right">Iš viso be PVM Eur.:</td>
+                    <td>{{single_agent.totalWithoutVat}}Eur</td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: right">PVM (21%) Eur.:</td>
+                    <td>{{single_agent.totalVat}}Eur</td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: right">Iš viso su PVM Eur.:</td>
+                    <td>{{single_agent.total}}Eur</td>
+                </tr>
+
+
+        </table>
+            <p style="margin-top: 5px">Šalys patvirtina, kad perduotos prekės yra kokybiškos ir atitinka techninius reikalavimus</p>
+        </div>
+        <p style="margin-top: 10px"><strong>Darbuotojas</strong> įsipareigoja materialines vertybes (kompiuterinę įrangą) perduoti vadovo paskirtam darbuotojui, kai <strong>Darbdavio</strong>
+            sprendimu nutraukiamas darbas iš namų arba ne vėliau kaip prieš 3 darbo dienas iki darbo santykių pasibaigimo.
+            <strong>Darbuotojas</strong> laikysis <strong>Darbdavio</strong> patvirtintų programinės įrangos, duomenų apsaugos ir kompiuterių naudojimo taisyklių.
+            Programinė įranga gali būti naudojama tik <strong>Darbdavio</strong> interesais ir tik ta, kuriai turimos reikiamos licencijos bei laikantis šių
+            licencijų sąlygų..
+            <strong>Darbuotojas</strong> padengs bet kokią <strong>Darbdavio</strong> patirtą žalą. Žala padaryta <strong>Darbdaviui</strong> bus atlyginama įstatymų nustatyta tvarka.
+            <strong>Darbuotojas</strong> asmeniškai atsako už bet kokią žalą, kiek tai susiję su <strong>Darbuotojui</strong> naudoti ar valdyti patikėtu <strong>Darbdavio</strong> turtu. </p>
+
+        <p style="margin-top: 10px">Materialines vertybes perdavė:</p>
+        <p style="margin-top: 20px">_______________________&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_______________&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;________________</p>
+        <p ><span>(Pareigų pavadinimas)</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp(Parašas)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Vardas, Pavardė)</p>
+
+        <p style="margin-top: 20px">Materialines vertybes priėmė:</p>
+        <p style="margin-top: 20px"><span>(Pareigų pavadinimas)</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            (Parašas)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size: 12px">{{ single_agent.agent_id.first_name }} {{ single_agent.agent_id.last_name }}</span></p>
+
+        <p style="margin-top: 10px">Darbuotojas patvirtina, kad savo noru sutiko dirbti iš namų ir Darbdavys aprūpino visomis reikalingomis priemonėmis saugiam darbui iš namų. </p>
+        <p style="margin-top: 20px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Parašas)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size: 12px">{{ single_agent.first_name }} {{ single_agent.last_name }}</span></p>
+
+        <p style="margin-top: 40px">Aš {{ single_agent.agent_id.first_name }} {{ single_agent.agent_id.last_name }} grąžinu įmonės aukščiau nurodytą turtą ____________&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;___________</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Data)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Parašas)</p>
+
+    </div>
+
+
+<!--        <div class="card">-->
+<!--              <div class="card-body">-->
+<!--                  <h1 class="red">TEST TEST TEST</h1>-->
+<!--                  <h5 class="card-title">{{ single_agent.first_name }} {{ single_agent.last_name }}</h5>-->
+<!--                  <h6 class="card-subtitle mb-2 text-muted">{{ single_agent.project_id }}</h6>-->
+<!--                  <p class="card-text">-->
+
+<!--                  {% for line in single_agent.ordersall.all%}-->
+
+<!--                            {% for orderline in line.orderlines.all %}-->
+<!--                                <p class="card-text"><strong>{{orderline.equipement_id.types_id}}</strong> {{orderline.equipement_id.manufacturer_id}} {{orderline.equipement_id.eqModels_id}} <strong>S/N:</strong> {{orderline.sn}} <strong>Price:</strong> {{orderline.equipement_id.price}}€  </p>-->
+<!--                            {% endfor %}-->
+
+
+<!--                  {% endfor %}-->
+
+<!--                  <p><em><strong>Date:</strong> {% for line in single_agent.ordersall.all%}-->
+<!--                  {{line.date_created}} {{line.id}}-->
+<!--                  {% endfor %}</em></p>-->
+
+
+
+<!--                  </p>-->
+
+
+<!--              </div>-->
+
+
+
+<!--</div>-->
+
+</body>
+</html>

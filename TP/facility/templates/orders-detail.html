@@ -1,0 +1,42 @@
+
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+  <div class="card-body">
+      <h5 class="card-title">{{ order.agent_id.first_name }} {{ order.agent_id.last_name }}</h5>
+      <h6 class="card-subtitle mb-2 text-muted">{{ order.agent_id.project_id }}</h6>
+      <p class="card-text">
+      {% if order.orderlines.all %}
+      {% for line in order.orderlines.all %}
+
+
+                    <p class="card-text"><strong>{{line.equipement_id.types_id}}</strong> {{line.equipement_id.manufacturer_id}} {{line.equipement_id.eqModels_id}} <strong>S/N:</strong> {{line.sn}} <strong>Price:</strong> {{line.equipement_id.price}}€  </p>
+
+
+
+          {% endfor %}
+
+      <p><em><strong>Date:</strong>
+      {{order.date_created}}
+      </em></p>
+
+
+      </p>
+      <a class="btn btn-primary m-2" href="{% url 'agreementPDF' order.id %}">Spausdinti sutartį PDF</a>
+      <a class="btn btn-primary m-2" href="{% url 'docx' order.id %}">Spausdinti sutartį DOCX</a>
+      {% else %}
+      <h3>No Orders</h3>
+      {% endif %}
+      <a class="btn btn-warning" href="{% url 'order-update' order.id %}">Edit</a>
+
+
+
+  </div>
+</div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container ">
+    <h1>Add Order TEST</h1>
+    <br><br>
+
+    {% if submitted %}
+        <h3>Agent added successfully!</h3>
+
+    {% else %}
+        {% for agent in agents %}
+            <li><a href="{% url 'agent_order_test' agent.id %}">{{agent}}</a></li>
+            <div class="form-error">{{f.errors}}</div>
+        {% endfor %}
+
+
+
+    {% endif %}
+
+</div>
+
+
+{% endblock %}

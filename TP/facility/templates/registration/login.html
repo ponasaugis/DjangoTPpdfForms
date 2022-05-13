@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+  <div class="col-4"></div>
+  <div class="col-4 text-center">
+    <h3><strong>Please Login</strong></h3>
+    {% if form.errors %}
+    <p>Authentication error, please try again!</p>
+  {% endif %}
+
+  {% if next %}
+    {% if user.is_authenticated %}
+      <p>Only authorized access. Please LOGIN.</p>
+    {% endif %}
+  {% endif %}
+
+  <form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+
+    {{ form.username|add_class:'form-control'|attr:'placeholder:User name' }}
+      <br>
+    {{ form.password|add_class:'form-control'|attr:'placeholder:Password' }}
+
+    <input class="btn btn-large btn-warning p-2 mt-4" type="submit" value="LOGIN" />
+    <input type="hidden" name="next" value="{{ next }}" />
+  </form>
+
+
+
+    </div>
+    </div>
+</div>
+
+
+{% endblock %}

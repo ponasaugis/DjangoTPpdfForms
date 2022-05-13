@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+
+  {% if orders %}
+  <h1 class="text-center">Search results for <span class="text-primary">{{query}}</span></h1>
+  <hr>
+  </br>
+  <ol>
+    {% for order in orders %}
+      <li>
+        <a href="{% url 'order' order.id %}">{{ order.id }} {{ order.agent_id.first_name }} {{ order.agent_id.last_name }}</a>
+      </li>
+    {% endfor %}
+  </ol>
+  {% else %}
+    <h1 class="text-center">Nothing about <span class="text-danger">{{query}}</span></h1>
+  {% endif %}
+</div>
+  {% endblock %}

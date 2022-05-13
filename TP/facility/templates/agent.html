@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+
+
+    <div class="card">
+  <div class="card-body">
+      <h5 class="card-title">{{ agent.first_name }} {{ agent.last_name }}</h5>
+      <h6 class="card-subtitle mb-2 text-muted">{{ agent.project_id }}, <small>  {{agent.phone}}</small></h6>
+      <hr>
+      <p class="card-text">
+      {% if agent.ordersall.all %}
+      {% for line in agent.ordersall.all%}
+
+
+                <p class="m-1"><small>Order ID: {{line.id}}</small></p>
+                {% for orderline in line.orderlines.all %}
+                    <p class="card-text m-0"><strong>{{orderline.equipement_id.types_id}}</strong> {{orderline.equipement_id.manufacturer_id}} {{orderline.equipement_id.eqModels_id}} <strong>S/N:</strong> {{orderline.sn}} <strong>Price:</strong> {{orderline.equipement_id.price}}€  </p>
+                {% endfor %}
+
+                <p><small><em><strong>Date: </strong>{{line.date_created}}</em></small></p>
+                <a class="btn btn-primary" href="{% url 'order' line.id %}">View</a>
+                <hr>
+          {% endfor %}
+
+
+
+
+      </p>
+
+      {% else %}
+      <h3>No Orders</h3>
+      {% endif %}
+
+
+
+
+  </div>
+</div>
+</div>
+
+
+{% endblock %}

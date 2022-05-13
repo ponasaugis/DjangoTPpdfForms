@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Add new Order</h1>
+    <hr>
+    <br>
+
+    {% if submitted %}
+        <h3 class="text-center">Agent added successfully!</h3>
+
+    {% else %}
+
+        <form action="" method="POST">
+            {% csrf_token %}
+            {{ form.non_form_errors }}
+            {{form.as_p}}
+
+            {{ order_line_meta_formset.non_form_errors }}
+            {{ order_line_meta_formset.management_form }}
+            <div class="card p-3">
+            {% for form in order_line_meta_formset %}
+            <div class="row">{{form}}</div>
+
+            {% endfor %}
+            </div>
+            <input type="submit" value="Submit" class="btn btn-secondary mt-3">
+
+        </form>
+    {% endif %}
+
+</div>
+
+
+{% endblock %}

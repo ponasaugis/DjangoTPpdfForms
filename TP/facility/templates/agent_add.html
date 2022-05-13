@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Add new Agent</h1>
+    <br><br>
+
+    {% if submitted %}
+        <h3>Agent added successfully!</h3>
+
+    {% else %}
+
+        <form action="" method="POST">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <input type="submit" value="Submit" class="btn btn-secondary">
+
+        </form>
+    {% endif %}
+
+</div>
+
+
+{% endblock %}
